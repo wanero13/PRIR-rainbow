@@ -1,0 +1,1 @@
+print('Tu narazie jest ściernisko')
