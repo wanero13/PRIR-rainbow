@@ -28,4 +28,5 @@ for i in range(chainNumber):
     initPassArr.append(hasher.randomPass(passLen))
 
 print(initPassArr)
+print(hasher.bluntHashPass(initPassArr[0], passLen))
 
