@@ -2,24 +2,22 @@ import hashlib
 import mpi4py
 import sys
 from supp import Hasher
-from supp import validateIfNumbers, validateInputValues
+from validator import Validator
 
 # UWAGA STALE HASLO
 hasher = Hasher()
-availableThreads = [2, 4, 8, 16, 32]
+validator = Validator()
+print(sys.argv)
 # Sprawdzenie i przypisanie wartosci parametrow do zmiennych
 if len(sys.argv) > 1:
-    if not validateIfNumbers(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]):
-        sys.exit("Wrong input")
-    if len(sys.argv) == 5:
-        threadNumber = int(sys.argv[1])
-        passLen = int(sys.argv[2])
-        chainLen = int(sys.argv[3])
-        chainNumber = int(sys.argv[4])
-        if not validateInputValues(threadNumber, passLen, chainLen, chainNumber, availableThreads):
-            sys.exit("Wrong input")
+    if len(sys.argv) == 5 and validator.validateParams(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]):
+            threadNumber = int(sys.argv[1])
+            passLen = int(sys.argv[2])
+            chainLen = int(sys.argv[3])
+            chainNumber = int(sys.argv[4])
     else:
-        print('Program must have 0 or 4 parameters')
+        print('Program must have 0 or 4 parameters in certain value range')
+        sys.exit()
 else:
     threadNumber = 4
     passLen = 5
