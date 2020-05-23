@@ -38,35 +38,3 @@ class Hasher():
         hashedPass = ''.join(hashedPass)
         newPass = self.basicReduction(hashedPass, passLen)
         return hashedPass, newPass
-
-
-def validateIfNumbers(threadNumber: str, passLen: str, chainLen: str, chainNumber: str):
-    if not threadNumber.isnumeric():
-        print("Wrong input in number of threads. (1st parameter)")
-        return False
-    if not passLen.isnumeric():
-        print("Wrong input in password length. (2nd parameter)")
-        return False
-    if not chainLen.isnumeric():
-        print("Wrong input in chain length. (3rd parameter)")
-        return False
-    if not chainNumber.isnumeric():
-        print("Wrong input in number of chains. (4th parameter)")
-        return False
-    return True
-
-
-def validateInputValues(threadNumber: int, passLen: int, chainLen: int, chainNumber: int, availableThreads):
-    if threadNumber not in availableThreads:
-        print("Wrong number of threads. (Only available: 2,4,8,16,32")
-        return False
-    if not 3 <= passLen <= 15:
-        print("Wrong password length. (3-15)")
-        return False
-    if not 10 <= chainLen <= 10000:
-        print("Wrong chain length. (10-10000)")
-        return False
-    if not 1 <= chainNumber <=10000:
-        print("Wrong number of chains")
-        return False
-    return True
