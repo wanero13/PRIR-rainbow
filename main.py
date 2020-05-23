@@ -2,18 +2,22 @@ import hashlib
 import mpi4py
 import sys
 from supp import Hasher
+from supp import validateIfNumbers, validateInputValues
 
-
-#UWAGA STALE HASLO
+# UWAGA STALE HASLO
 hasher = Hasher()
-availableTreads = [2,4,8,16,32]
+availableThreads = [2, 4, 8, 16, 32]
 # Sprawdzenie i przypisanie wartosci parametrow do zmiennych
-if len(sys.argv)>1:
-    if len(sys.argv)==5:
+if len(sys.argv) > 1:
+    if not validateIfNumbers(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]):
+        sys.exit("Wrong input")
+    if len(sys.argv) == 5:
         threadNumber = int(sys.argv[1])
         passLen = int(sys.argv[2])
         chainLen = int(sys.argv[3])
         chainNumber = int(sys.argv[4])
+        if not validateInputValues(threadNumber, passLen, chainLen, chainNumber, availableThreads):
+            sys.exit("Wrong input")
     else:
         print('Program must have 0 or 4 parameters')
 else:
@@ -29,4 +33,3 @@ for i in range(chainNumber):
 
 print(initPassArr)
 print(hasher.bluntHashPass(initPassArr[0], passLen))
-
