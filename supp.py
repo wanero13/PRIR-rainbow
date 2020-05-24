@@ -38,3 +38,9 @@ class Hasher():
         hashedPass = ''.join(hashedPass)
         newPass = self.basicReduction(hashedPass, passLen)
         return hashedPass, newPass
+
+    def hashPassDes(self, password: str) -> str:
+        lack = 8 - len(password) % 8
+        password = password + lack * '0'
+        cipher = DES.new(self.key, DES.MODE_ECB)
+        return cipher.encrypt(password.encode())

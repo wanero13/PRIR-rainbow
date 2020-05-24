@@ -34,4 +34,19 @@ else:
     chainLen = inputToRecv[1]
     chainNumber = inputToRecv[2]
 
-print(passLen)
+chainsToDo = int(chainNumber / size)
+generatedPasswords = []
+for i in range(1, chainsToDo):
+    generatedPasswords.append(hasher.randomPass(passLen))
+
+print(generatedPasswords)
+
+for i in range(0, chainsToDo - 1):
+    chainStart = generatedPasswords[i]
+    currentPasswordProcessed = chainStart
+    for j in range(1, chainLen - 1):
+        _, currentPasswordProcessed = hasher.bluntHashPass(currentPasswordProcessed, passLen)
+    chainEnd = hasher.hashPassDes(currentPasswordProcessed)
+    print(chainStart)
+    print(chainEnd)
+    # Tu zapisik do pliku danego łańcucha
