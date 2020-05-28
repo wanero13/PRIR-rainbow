@@ -13,10 +13,12 @@ rank = comm.Get_rank()
 
 if rank == 0:
     if len(sys.argv) > 1:
-        if len(sys.argv) == 4 and validator.validateParams(size, sys.argv[1], sys.argv[2], sys.argv[3]):
-            passLen = int(sys.argv[2])
-            chainLen = int(sys.argv[3])
-            chainNumber = int(sys.argv[4])
+        print(len(sys.argv))
+        if len(sys.argv) == 5 and validator.validateParams(size, sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]):
+            passLen = int(sys.argv[1])
+            chainLen = int(sys.argv[2])
+            chainNumber = int(sys.argv[3])
+            outputFilename = str(sys.argv[4])
         else:
             print('Program must have 0 or 4 parameters in certain value range')
             sys.exit()
@@ -25,6 +27,7 @@ if rank == 0:
         passLen = 5
         chainLen = 1000
         chainNumber = 1000
+        outputFilename = "result.txt"
     inputValuesToSend = [passLen, chainLen, chainNumber]
     for i in range(1, size):
         comm.send(inputValuesToSend, dest=i)
@@ -36,17 +39,30 @@ else:
 
 chainsToDo = int(chainNumber / size)
 generatedPasswords = []
-for i in range(1, chainsToDo):
+for i in range(0, chainsToDo):
     generatedPasswords.append(hasher.randomPass(passLen))
 
-print(generatedPasswords)
-
-for i in range(0, chainsToDo - 1):
+chainsList = []
+for i in range(0, chainsToDo):
     chainStart = generatedPasswords[i]
     currentPasswordProcessed = chainStart
-    for j in range(1, chainLen - 1):
+    for j in range(0, chainLen):
         _, currentPasswordProcessed = hasher.bluntHashPass(currentPasswordProcessed, passLen)
+
     chainEnd = hasher.hashPassDes(currentPasswordProcessed)
-    print(chainStart)
-    print(chainEnd)
-    # Tu zapisik do pliku danego łańcucha
+    chain = (chainStart, chainEnd)
+    chainsList.append(chain)
+
+if rank != 0:
+    comm.send(chainsList, dest=0)
+else:
+    for i in range(1, size):
+        receivedList = comm.recv(source=i)
+        chainsList.extend(receivedList)
+    print(len(chainsList))
+    f = open(outputFilename, "w")
+    for chain in chainsList:
+        f.write(chain[0]+' ' + str(chain[1]) + "\n")
+    f.close()
+
+

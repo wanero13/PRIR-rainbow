@@ -3,12 +3,13 @@ class Validator():
         self.threadRange = [2, 4, 8, 16, 32]
         pass
 
-    def validateParams(self, threadNumber, passLen, chainLen, chainNumber):
+    def validateParams(self, threadNumber, passLen, chainLen, chainNumber, outputFilename):
         try:
             threadNumber = int(threadNumber)
             passLen = int(passLen)
             chainLen = int(chainLen)
             chainNumber = int(chainNumber)
+            outputFilename = str(outputFilename)
         except:
             return False
         if not threadNumber in self.threadRange:
